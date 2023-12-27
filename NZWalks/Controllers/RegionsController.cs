@@ -1,6 +1,5 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using NZWalks.Data;
 using NZWalks.Models.Domain;
 using NZWalks.Models.DTO;
 using NZWalks.Repositories;
@@ -12,29 +11,20 @@ namespace NZWalks.Controllers;
 public class RegionsController : ControllerBase
 {
     private readonly IRegionRepository _regionRepository;
+    private readonly IMapper _mapper;
 
-    public RegionsController(IRegionRepository regionRepository)
+    public RegionsController(IRegionRepository regionRepository, IMapper mapper)
     {
         _regionRepository = regionRepository;
+        _mapper = mapper;
     }
     
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
         var regions = await _regionRepository.GetAllRegionsAsync();
-        var regionsDto = new List<RegionDto>();
-        foreach (var region in regions)
-        {
-            regionsDto.Add(new RegionDto()
-            {
-                Id = region.Id,
-                Name = region.Name,
-                Code = region.Code,
-                RegionImageUrl = region.RegionImageUrl
-            });
-        }
 
-        return Ok(regionsDto);
+        return Ok(_mapper.Map<List<RegionDto>>(regions));
     }
 
     [HttpGet]
@@ -45,36 +35,17 @@ public class RegionsController : ControllerBase
 
         if (region == null) return NotFound();
 
-        var regionDto = new RegionDto()
-        {
-            Id = region.Id,
-            Name = region.Name,
-            Code = region.Code,
-            RegionImageUrl = region.RegionImageUrl
-        };
-
-        return Ok(regionDto);
+        return Ok(_mapper.Map<RegionDto>(region));
     }
 
     [HttpPost]
     public async Task<IActionResult> CreateRegion([FromBody] AddRegionDto request)
     {
-        var region = new Region()
-        {
-            Code = request.Code,
-            Name = request.Name,
-            RegionImageUrl = request.RegionImageUrl
-        };
+        var region = _mapper.Map<Region>(request);
 
         region = await _regionRepository.CreateRegionAsync(region);
 
-        var regionDto = new RegionDto()
-        {
-            Id = region.Id,
-            Name = region.Name,
-            Code = region.Code,
-            RegionImageUrl = region.RegionImageUrl
-        };
+        var regionDto = _mapper.Map<RegionDto>(region);
 
         return CreatedAtAction(nameof(GetRegionById), new { id = region.Id }, regionDto);
     }
