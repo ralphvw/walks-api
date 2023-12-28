@@ -19,16 +19,32 @@ public class SQLWalkRepository: IWalkRepository
         return walk;
     }
 
-    public async Task<List<Walk>> GetWalksAsync(string? filterOn = null, string? filterQuery = null)
+    public async Task<List<Walk>> GetWalksAsync(string? filterOn = null, string? filterQuery = null, string? sortBy = null, bool isAscending = true)
     {
         var walks = _dbContext.Walks.Include("Difficulty").Include("Region").AsQueryable();
 
-        if (string.IsNullOrWhiteSpace(filterOn) != false || string.IsNullOrWhiteSpace(filterQuery) != false)
-            return await walks.ToListAsync();
-        if (filterOn.Equals("Name", StringComparison.OrdinalIgnoreCase))
+        if (string.IsNullOrWhiteSpace(filterOn) == false && string.IsNullOrWhiteSpace(filterQuery) == false)
         {
-            walks = walks.Where(x => x.Name.Contains(filterQuery));
+
+            if (filterOn.Equals("Name", StringComparison.OrdinalIgnoreCase))
+            {
+                walks = walks.Where(x => x.Name.Contains(filterQuery));
+            }
         }
+        
+        if (string.IsNullOrWhiteSpace(sortBy) == false)
+        {
+
+            if (sortBy.Equals("Name", StringComparison.OrdinalIgnoreCase))
+            {
+                walks = isAscending ? walks.OrderBy(x => x.Name) : walks.OrderByDescending(x => x.Name);
+            }
+            if (sortBy.Equals("Length", StringComparison.OrdinalIgnoreCase))
+            {
+                walks = isAscending ? walks.OrderBy(x => x.LengthInKm) : walks.OrderByDescending(x => x.LengthInKm);
+            }
+        }
+
         return await walks.ToListAsync();
     }
 
