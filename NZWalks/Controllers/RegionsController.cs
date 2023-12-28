@@ -1,5 +1,6 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using NZWalks.CustomActionFilters;
 using NZWalks.Models.Domain;
 using NZWalks.Models.DTO;
 using NZWalks.Repositories;
@@ -39,9 +40,10 @@ public class RegionsController : ControllerBase
     }
 
     [HttpPost]
+    [ValidateModel]
     public async Task<IActionResult> CreateRegion([FromBody] AddRegionDto request)
     {
-        if (!ModelState.IsValid) return BadRequest(ModelState);
+        
         var region = _mapper.Map<Region>(request);
 
         region = await _regionRepository.CreateRegionAsync(region);
@@ -53,9 +55,9 @@ public class RegionsController : ControllerBase
 
     [HttpPut]
     [Route("{id:Guid}")]
+    [ValidateModel]
     public async Task<IActionResult> UpdateRegion([FromRoute] Guid id, [FromBody] UpdateRegionDto request)
     {
-        if (!ModelState.IsValid) return BadRequest(ModelState);
         var region = await _regionRepository.UpdateRegionAsync(id, request);
 
         if (region == null) return NotFound();

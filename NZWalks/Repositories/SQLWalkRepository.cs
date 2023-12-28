@@ -19,10 +19,17 @@ public class SQLWalkRepository: IWalkRepository
         return walk;
     }
 
-    public async Task<List<Walk>> GetWalksAsync()
+    public async Task<List<Walk>> GetWalksAsync(string? filterOn = null, string? filterQuery = null)
     {
-        var walks = await _dbContext.Walks.Include("Difficulty").Include("Region").ToListAsync();
-        return walks;
+        var walks = _dbContext.Walks.Include("Difficulty").Include("Region").AsQueryable();
+
+        if (string.IsNullOrWhiteSpace(filterOn) != false || string.IsNullOrWhiteSpace(filterQuery) != false)
+            return await walks.ToListAsync();
+        if (filterOn.Equals("Name", StringComparison.OrdinalIgnoreCase))
+        {
+            walks = walks.Where(x => x.Name.Contains(filterQuery));
+        }
+        return await walks.ToListAsync();
     }
 
     public async Task<Walk?> GetWalkByIdAsync(Guid id)
