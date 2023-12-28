@@ -54,4 +54,14 @@ public class WalksController : ControllerBase
 
         return Ok(_mapper.Map<WalkDto>(walk));
     }
+
+    [HttpDelete]
+    [Route("{id:Guid}")]
+    public async Task<IActionResult> DeleteWalk([FromRoute] Guid id)
+    {
+        var walk = await _walkRepository.DeleteWalkAsync(id);
+        if (walk == null) return NotFound();
+
+        return Ok(_mapper.Map<WalkDto>(walk));
+    }
 }

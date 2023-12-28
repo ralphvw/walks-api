@@ -32,7 +32,7 @@ public class SQLWalkRepository: IWalkRepository
 
     public async Task<Walk?> UpdateWalkAsync(Guid id, Walk walk)
     {
-        var existingWalk = await _dbContext.Walks.FirstOrDefaultAsync(x => x.Id == id);
+        var existingWalk = await _dbContext.Walks.Include("Difficulty").Include("Region").FirstOrDefaultAsync(x => x.Id == id);
         if (existingWalk == null) return null;
 
         existingWalk.Name = walk.Name;
@@ -45,5 +45,16 @@ public class SQLWalkRepository: IWalkRepository
         await _dbContext.SaveChangesAsync();
 
         return existingWalk;
+    }
+
+    public async Task<Walk?> DeleteWalkAsync(Guid id)
+    {
+        var walk = await _dbContext.Walks.FirstOrDefaultAsync(x => x.Id == id);
+        if (walk == null) return null;
+
+        _dbContext.Walks.Remove(walk);
+        await _dbContext.SaveChangesAsync();
+
+        return walk;
     }
 }

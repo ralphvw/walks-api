@@ -8,4 +8,5 @@ public interface IWalkRepository
     Task<List<Walk>> GetWalksAsync();
     Task<Walk?> GetWalkByIdAsync(Guid id);
     Task<Walk?> UpdateWalkAsync(Guid id, Walk walk);
+    Task<Walk?> DeleteWalkAsync(Guid id);
 }
