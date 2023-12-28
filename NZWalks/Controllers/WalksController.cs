@@ -33,4 +33,13 @@ public class WalksController : ControllerBase
         var walks = await _walkRepository.GetWalksAsync();
         return Ok(_mapper.Map<List<WalkDto>>(walks));
     }
+
+    [HttpGet]
+    [Route("{id:Guid}")]
+    public async Task<IActionResult> GetWalkById([FromRoute] Guid id)
+    {
+        var walk = await _walkRepository.GetWalkByIdAsync(id);
+        if (walk == null) return NotFound();
+        return Ok(_mapper.Map<WalkDto>(walk));
+    }
 }

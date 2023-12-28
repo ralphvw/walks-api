@@ -6,4 +6,5 @@ public interface IWalkRepository
 {
     Task<Walk> CreateWalkAsync(Walk walk);
     Task<List<Walk>> GetWalksAsync();
+    Task<Walk?> GetWalkByIdAsync(Guid id);
 }
