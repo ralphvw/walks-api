@@ -42,4 +42,16 @@ public class WalksController : ControllerBase
         if (walk == null) return NotFound();
         return Ok(_mapper.Map<WalkDto>(walk));
     }
+
+    [HttpPut]
+    [Route("{id:Guid}")]
+    public async Task<IActionResult> UpdateWalk([FromRoute] Guid id, UpdateWalkDto request)
+    {
+        var walk = _mapper.Map<Walk>(request);
+        walk = await _walkRepository.UpdateWalkAsync(id, walk);
+
+        if (walk == null) return NotFound();
+
+        return Ok(_mapper.Map<WalkDto>(walk));
+    }
 }
