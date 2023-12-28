@@ -20,6 +20,7 @@ builder.Services.AddDbContext<WalksDbContext>(options => options.UseSqlServer(bu
 builder.Services.AddDbContext<WalksAuthDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("WalksAuthConnectionString")));
 builder.Services.AddScoped<IRegionRepository, SQLRegionRepository>();
 builder.Services.AddScoped<IWalkRepository, SQLWalkRepository>();
+builder.Services.AddScoped<ITokenRepository, TokenRepository>();
 
 builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
 
