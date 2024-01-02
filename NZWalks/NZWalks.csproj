@@ -4,6 +4,7 @@
         <TargetFramework>net7.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <UserSecretsId>fca90e18-d41a-49ac-9253-f7450a8e8f50</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>
@@ -20,6 +21,10 @@
         <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="7.0.3" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
         <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.0.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Images\" />
     </ItemGroup>
 
 </Project>
